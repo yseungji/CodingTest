@@ -67,7 +67,57 @@
 
 <p>힌트가 필요한가요? [코딩테스트 연습 힌트 모음집]으로 오세요! → <a href="https://school.programmers.co.kr/learn/courses/14743?itm_content=lesson43238" target="_blank" rel="noopener">클릭</a></p>
 
+
+
 <p>※ 공지 - 2019년 9월 4일 문제에 새로운 테스트 케이스를 추가하였습니다. 도움을 주신 weaver9651 님께 감사드립니다.</p>
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+나의 코드 :
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+long long solution(int n, vector<int> times) {
+    long long answer = 0;
+    
+    long long int left = 1;
+    long long int right;
+    for(int i=0;i<times.size();i++)
+    right += times[i];
+    
+    while(left <= right) {
+        long long mid = (left + right) / 2;
+
+        long long ans = 0;
+        
+        for(int i=0;i<times.size();i++){
+            ans += mid/times[i];
+        }
+        
+        if(n <= ans){
+            answer = mid;
+            right = mid - 1;
+        }
+        else if(n > ans) {
+            left = mid + 1;
+        }
+    }
+    
+    return answer;
+}📝 입국심사 (이분 탐색) 오답 노트
+1. 탐색 범위(right) 설정 시 주의점
+오버플로우 발생: right를 무작정 LONG_MAX로 설정하면, mid 값이 너무 커져서 사람 수를 구하는 과정(ans += mid / times[i])에서 변수 허용 범위를 초과하는 오버플로우가 발생합니다.
+
+초기화 누락과 우연한 통과: right를 배열의 합으로 수정했을 때 통과했던 이유는 로직이 맞아서가 아니었습니다. 변수를 0으로 초기화하지 않아 할당된 거대한 쓰레기값(Garbage Value) 덕분에 우연히 탐색 범위가 넓어져 통과한 것입니다. (실제 배열의 합은 모든 사람을 심사하기에 턱없이 부족한 시간입니다.)
+
+올바른 상한선(최댓값) 설정: right는 발생할 수 있는 최악의 상황, 즉 가장 오래 걸리는 심사관 혼자서 모든 인원(n)을 심사하는 시간(배열의 최댓값 × n)으로 설정해야 안전하고 정확하게 동작합니다.
+
+2. 정답 갱신 조건(n <= ans)의 이해
+기존의 착각: 심사한 사람 수가 목표와 정확히 일치하는 n == ans일 때만 정답이 될 것이라고 생각했습니다.
+
+수정된 로직: 각 심사관의 소요 시간이 다르기 때문에, 특정 시간에는 사람 수가 n명으로 딱 떨어지지 않고 초과해서 심사하게 되는 경우가 존재합니다. 따라서 목표 인원 이상을 심사할 수 있는 n <= ans 상태를 모두 정답 후보로 저장하고, 탐색 범위를 좁혀가며 그중 최소 시간을 찾아야 모든 테스트 케이스를 통과할 수 있습니다.
+
