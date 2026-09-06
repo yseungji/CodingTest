@@ -61,8 +61,6 @@
       </table>
 <h5>입출력 예 설명</h5>
 
-<p><img src="https://asset.programmers.co.kr/files/ybm/32c67958d5/729216f3-f305-4ad1-b3b0-04c2ba0b379a.png" title="" alt="image1.png"></p>
-
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
 
