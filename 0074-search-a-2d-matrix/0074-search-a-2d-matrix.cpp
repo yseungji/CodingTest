@@ -8,17 +8,15 @@ public:
         while(left<=right) {
             int mid = (left + right)/2;
             row = (mid-1) / matrix[0].size();
-            cout << row << ' ';
             column = (mid-1) % matrix[0].size();
-            cout << column << ' ';
-            if(matrix[row][column] > target) {
-                right = mid - 1;
+            if(matrix[row][column] == target) {
+                return true;
             }
             else if(matrix[row][column] < target) {
                 left = mid + 1;
             }
             else {
-                return true;
+                right = mid - 1;
             }
         }
         
